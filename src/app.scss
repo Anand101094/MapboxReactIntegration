@@ -1,0 +1,34 @@
+.main-app {
+    .movie-row {
+        display: flex;
+        margin-bottom: 8px;
+
+        .movie-seat {
+            width: 50px;
+            height: 50px;
+            margin-right: 4px;
+
+            .seat-id {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: inherit;
+                width: inherit;
+                background-color: grey;
+                border-radius: 8px;
+                cursor: pointer;
+                &.selected {
+                    background: lightgray;
+                }
+            }
+        }
+    }
+    .booking-screen {
+        .show-selection-row {
+            padding: 12px 0;
+        }
+        .seat-details{
+            padding: 12px 0;
+        }
+    }
+}
