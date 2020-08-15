@@ -1,4 +1,10 @@
 .main-app {
+    padding: 0 16px;
+    h4 {
+        padding: 8px 0;
+        color: #333;
+        border-bottom: 1px solid #e5e5e4;
+    }
     .movie-row {
         display: flex;
         margin-bottom: 8px;
@@ -20,15 +26,82 @@
                 &.selected {
                     background: lightgray;
                 }
+                &.booked {
+                    cursor: not-allowed;
+                    background-color: #272727;
+                    color: lightgray;
+                }
             }
         }
     }
     .booking-screen {
         .show-selection-row {
             padding: 12px 0;
+            .select-show {
+                margin-right: 16px;
+                font-weight: 500;
+                color: #333;
+            }
+            label {
+                margin-right: 24px;
+            }
         }
-        .seat-details{
+        .seat-details {
             padding: 12px 0;
+            font-weight: 500;
+            color: #333;
         }
+        .references {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            justify-content: center;
+            color: #333;
+            font-weight: 500;
+
+            .booked-stat,
+            .available-stat,
+            .selected-stat {
+                display: flex;
+                align-items: center;
+                margin-right: 16px;
+            }
+            .booked-circle,
+            .available-circle,
+            .selected-circle {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                margin-right: 8px;
+            }
+            .booked-circle {
+                background-color: #272727;
+            }
+            .available-circle {
+                background-color: grey;
+            }
+            .selected-circle {
+                background-color: lightgray;
+            }
+        }
+    }
+
+    .ticket-summary {
+        font-size: 16px;
+        color: #333;
+        .back-n-next {
+            margin-top: 16px;
+        }
+    }
+    .payment-confirmation {
+        font-size: 16px;
+        color: #333;
+        .conf-btn {
+            margin-top: 16px;
+        }
+    }
+    .btn {
+        margin-right: 8px;
     }
 }

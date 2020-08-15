@@ -1,11 +1,17 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Link, withRouter } from 'react-router-dom'
 
-const TicketSummary = ({ selectedShow, totalPrice }) => {
+const TicketSummary = ({ selectedShow, totalPrice, ...props }) => {
 
     let serviceTax = +(14 / 100 * totalPrice).toFixed(2)
     let otherTaxes = 0.5 / 100 * totalPrice
     let total = totalPrice + serviceTax + (2 * otherTaxes)
+
+    useEffect(() => {
+        if (!totalPrice) {
+            props.history.push('/')
+        }
+    }, [])
 
     return (
         <div className='ticket-summary'>
@@ -17,11 +23,11 @@ const TicketSummary = ({ selectedShow, totalPrice }) => {
             <div>Total: Rs.{total}</div>
 
             <div className='back-n-next'>
-                <Link to='/'><button>Back</button></Link>
-                <Link to='/payment-confirmation'><button >Next</button></Link>
+                <Link to='/'><button className='btn'>Back</button></Link>
+                <Link to='/payment-confirmation'><button className='btn'>Next</button></Link>
             </div>
         </div>
     )
 }
 
-export default TicketSummary
+export default withRouter(TicketSummary)

@@ -6,7 +6,10 @@ const Seats = ({ setSeats, seat, selected, price }) => {
         <div className='movie-seat'>
             {
                 seat.name ?
-                    <span className={`seat-id ${selected ? 'selected' : ''}`} onClick={() => setSeats(seat.name, price)}>{seat.name}</span>
+                    <span className={`seat-id ${selected ? 'selected' : ''} ${seat.booked ? 'booked' : ''}`} 
+                    onClick={seat.booked ? null : () => setSeats(seat.name, price)}
+                    title={`${seat.booked ? `${seat.name} is not available. Book other seats.` : ''}`}
+                    >{seat.name}</span>
                     : null
             }
         </div>

@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 
 const PaymentConfirmation = ({ totalPrice, setSelectedShow, setSelectedSeats, ...props }) => {
+
+    useEffect(() => {
+        if (!totalPrice) {
+            props.history.push('/')
+        }
+    }, [])
 
     const handleClick = () => {
         setSelectedShow('show1')
@@ -19,7 +25,9 @@ const PaymentConfirmation = ({ totalPrice, setSelectedShow, setSelectedSeats, ..
             <div>Swachh Bharat Cess: Rs.{otherTaxes}</div>
             <div>Krishi Kalyan Cess: Rs.{otherTaxes}</div>
 
-            <button onClick={handleClick}>Home</button>
+            <div className='conf-btn'>
+                <button className='btn' onClick={handleClick}>Home</button>
+            </div>
         </div>
     )
 }

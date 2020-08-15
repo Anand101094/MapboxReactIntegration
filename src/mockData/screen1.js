@@ -3,7 +3,7 @@ export const Screen1Data = {
         {
             id: "A",
             type: "platinum",
-            price: 250,
+            price: 320,
             seats: [
                 { name: "A1", booked: false }, { name: "A2", booked: false }, { name: "A3", booked: false },
                 { name: "A4", booked: false }, { name: "A5", booked: false }, { name: "A6", booked: false },
@@ -14,7 +14,7 @@ export const Screen1Data = {
         {
             id: "B",
             type: "gold",
-            price: 200,
+            price: 280,
             seats: [
                 { name: "B1", booked: false }, { name: "B2", booked: false }, { name: "B3", booked: false },
                 { name: "B4", booked: false }, { name: "B5", booked: false }, { name: "B6", booked: false },
@@ -24,7 +24,7 @@ export const Screen1Data = {
         {
             id: "C",
             type: "silver",
-            price: 150,
+            price: 240,
             seats: [
                 { name: null, booked: null }, { name: "C2", booked: false }, { name: "C3", booked: false },
                 { name: "C4", booked: false }, { name: "C5", booked: false }, { name: "C6", booked: false },
