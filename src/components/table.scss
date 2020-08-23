@@ -1,0 +1,36 @@
+.postal-code-table {
+    width: 100%;
+    height: calc(100% - 88px);
+    overflow: auto;
+    border: 1px solid #e5e5e4;
+
+    .virtual-container {
+        position: relative;
+        overflow: hidden;
+
+        .postal-code-row {
+            display: flex;
+            height: 40px;
+            align-items: center;
+            color: #333;
+            border-bottom: 1px solid #e5e5e4;
+            position: absolute;
+            width: 100%;
+            cursor: pointer;
+
+            &:hover{
+                background-color: #e5e5e4;
+                box-shadow: 0px 3px 6px 2px rgba(173, 173,173, 0.16);
+            }
+
+            .post-row-data{
+                display: inline-flex;
+                width: 33.33%;
+                height: 100%;
+                align-items: center;
+                padding: 0 32px;
+                border-right: 1px solid #e5e5e4;
+            }
+        }
+    }
+}

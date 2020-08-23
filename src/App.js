@@ -1,80 +1,101 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-import { Screen1Data } from './mockData/screen1'
-import { Screen2Data } from './mockData/screen2'
-import { Screen3Data } from './mockData/screen3'
+import PostalCodeTable from './components/PostalCodeTable'
+import ReactMapGl, { Marker } from 'react-map-gl'
+import { postalData } from './mockData/postData'
+import Map from './components/Map'
+import { Throttle } from './util'
 import './app.scss'
 
-import BookShow from './components/BookShow'
-import TicketSummary from './components/TicketSummary'
-import PaymentConfirmation from './components/PaymentConfirmation'
 
 const App = () => {
 
-    const [selectedShowData, setSelectedShowData] = useState(Screen1Data.rows)
-    const [selectedSeats, setSelectedSeats] = useState({})
-    const [show1Data, setShow1Data] = useState(Screen1Data.rows)
-    const [show2Data, setShow2Data] = useState(Screen2Data.rows)
-    const [show3Data, setShow3Data] = useState(Screen3Data.rows)
-    const [selectedShow, setSelectedShow] = useState('show1')
-
-    useEffect(() => {
-        setSelectedSeats({})
-    }, [])
-
-    useEffect(() => {
-        setSelectedSeats({})
-        switch (selectedShow) {
-            case 'show1':
-                setSelectedShowData(show1Data)
-                break;
-            case 'show2':
-                setSelectedShowData(show2Data)
-                break;
-            case 'show3':
-                setSelectedShowData(show3Data)
-                break;
-            default:
-                setSelectedShowData(show1Data)
+    const [searchText, setSearchText] = useState('')
+    const [currentData, setCurrentData] = useState(postalData.postal_codes.slice(0, 60))
+    const [viewport, setViewPort] = useState({
+        latitude: 39.3041754,
+        longitude: -9.1967347,
+        width: '100%',
+        height: '100%',
+        zoom: 5,
+    })
+    
+    const handleScroll = (e) => {
+        if (!searchText) {
+            let element = e.target
+            let prevElem = Math.floor(element.scrollTop / 40)
+            let totalCount = postalData.count;
+            let startIndex = prevElem < 20 ? 0 : (prevElem > totalCount - 60) ? totalCount - 60 : prevElem - 20
+            let endIndex = startIndex + 60
+            let onScreenData = postalData.postal_codes.slice(startIndex, endIndex)
+            setCurrentData(onScreenData)
         }
-    }, [selectedShow])
+    }
 
-    const setSeats = (id, price) => {
-        if (selectedSeats[id]) {
-            let cloneSelectedSeats = Object.assign({}, selectedSeats)
-            delete cloneSelectedSeats[id]
-            setSelectedSeats(cloneSelectedSeats)
+    const scrollToTop = () => {
+        let element = document.getElementById("postal-table")
+        element.scrollTop = "0"
+    }
+
+    const filteredData = (text) => {
+        let data = [...postalData.postal_codes]
+        if (text) {
+            let filteredRows = data.filter((item, index) => {
+                return item.postal_code && item.postal_code.includes(text)
+            })
+            setCurrentData(filteredRows)
+            if (filteredRows.length) {
+                setViewPort({
+                    ...viewport,
+                    latitude: filteredRows[0].position.lat,
+                    longitude: filteredRows[0].position.lng,
+                    zoom: filteredRows.length === 1 ? 15 : 5
+                })
+            }
+            scrollToTop()
         } else {
-            setSelectedSeats({ ...selectedSeats, [id]: price })
+            setCurrentData(data.slice(0, 60))
         }
     }
 
-    const setShow = (data) => {
-        if (data) {
-            setSelectedShow(data)
-        }
+    const handleChange = (e) => {
+        let searchText = e.target.value
+        setSearchText(searchText)
+        filteredData(searchText)
     }
 
-    const bookTickets = () => {
-        Object.keys(selectedSeats).forEach(item => {
-            let findRow = selectedShowData.find(row => row.id === item.slice(0, 1))
-            let findSeat = findRow.seats.find(seat => seat.name === item)
-            findSeat.booked = true
-        })
+    const clearSearch = () => {
+        setSearchText('')
+        setCurrentData(postalData.postal_codes.slice(0, 60))
     }
-
-    let totalPrice = Object.values(selectedSeats).reduce((acc, item) => acc + item, 0)
+    const throttledScroll = Throttle(handleScroll, 100)
 
     return (
-        <div className='main-app container'>
-            <h4>Book Tickets</h4>
-            <BrowserRouter>
-                <Switch>
-                    <Route exact path='/'><BookShow bookTickets={bookTickets} setShow={setShow} selectedShowData={selectedShowData} selectedShow={selectedShow} selectedSeats={selectedSeats} setSelectedSeats={setSelectedSeats} setSeats={setSeats} /></Route>
-                    <Route exact path='/ticketsummary'><TicketSummary totalPrice={totalPrice} selectedShow={selectedShow} /></Route>
-                    <Route exact path='/payment-confirmation'><PaymentConfirmation totalPrice={totalPrice} setSelectedSeats={setSelectedSeats} setSelectedShow={setSelectedShow} /></Route>
-                </Switch>
-            </BrowserRouter>
+        <div className='main-app '>
+            <h3>Postal Code Search</h3>
+            <div className='row map-n-table'>
+                <div className='col s6 map-section'>
+                    <Map
+                        currentData={currentData}
+                        setViewPort={setViewPort}
+                        viewport={viewport}
+                    />
+                </div>
+
+                <div className='col s5 offset-s1 table-section'>
+                    <div className='search-section'>
+                        <input type='text' className='search-box' onChange={handleChange} value={searchText} placeholder="Search postal code" />
+                        <span className='material-icons search-icon'>search</span>
+                        {searchText && <span className='material-icons close-icon' onClick={clearSearch}>close</span>}
+                    </div>
+
+                    <PostalCodeTable
+                        handleScroll={throttledScroll}
+                        postalCodeData={currentData}
+                        totalCount={postalData.count}
+                        filter={searchText}
+                    />
+                </div>
+            </div>
         </div>
     )
 
